@@ -13,6 +13,12 @@ body{
   color:#30501f;
   margin:10px;
   text-align:left;
+  display: flex;
+  justify-content: center;
+}
+
+.app-help{
+  width: 550px;
 }
 
 .app-help-container h3{

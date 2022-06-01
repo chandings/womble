@@ -1,0 +1,77 @@
+.App {
+  text-align: center;
+}
+
+body{
+  padding:0;
+  margin:0; 
+}
+
+.app-help-container{
+  font-size:20px;
+  font-family: Arial, Helvetica, sans-serif;
+  color:#30501f;
+  margin:10px;
+  text-align:left;
+}
+
+.app-help-container h3{
+  text-align:center;
+}
+
+.app-help-close-btn-container{
+  display: flex;
+  justify-content: flex-end;
+}
+
+.app-help-close-btn{
+  background: #95f962;
+  border: 1px solid #95f962;
+  color:#30501f;
+  border-radius: 18px;
+  height: 36px;
+  width: 36px;
+  justify-content: flex-end;
+}
+
+@media (hover: hover), (-ms-high-contrast:none) {
+  .app-help-close-btn:hover{
+      color: #95f962;
+      background-color:#30501f;
+  }
+}
+
+.app-help-close-btn:active{
+  color: #95f962;
+  background-color:#30501f;
+}
+
+.gg-close {
+  box-sizing: border-box;
+  position: relative;
+  display: block;
+  transform: scale(var(--ggs,1));
+  width: 22px;
+  height: 22px;
+  border: 2px solid transparent;
+  border-radius: 40px
+ }
+ 
+ .gg-close::after,
+ .gg-close::before {
+  content: "";
+  display: block;
+  box-sizing: border-box;
+  position: absolute;
+  width: 16px;
+  height: 2px;
+  background: currentColor;
+  transform: rotate(45deg);
+  border-radius: 5px;
+  top: 8px;
+  left: 1px
+ }
+ 
+ .gg-close::after {
+  transform: rotate(-45deg)
+ } 

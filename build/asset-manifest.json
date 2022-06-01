@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/womble/static/css/main.c435145c.css",
+    "main.js": "/womble/static/js/main.9b227e73.js",
+    "static/js/787.2b5e885f.chunk.js": "/womble/static/js/787.2b5e885f.chunk.js",
+    "index.html": "/womble/index.html",
+    "main.c435145c.css.map": "/womble/static/css/main.c435145c.css.map",
+    "main.9b227e73.js.map": "/womble/static/js/main.9b227e73.js.map",
+    "787.2b5e885f.chunk.js.map": "/womble/static/js/787.2b5e885f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.c435145c.css",
+    "static/js/main.9b227e73.js"
+  ]
+}

@@ -2,10 +2,15 @@ import {useState, useEffect} from 'react'
 import LetterButton from '../letterButton/LetterButton'
 import {nextWord, loadLevelsFile, setLevelsData} from '../../utils/Words'
 import "./Game.css"
+import DefinitionModal from '../definitionModal/DefinitionModal';
+import axios from 'axios';
 
 
 export default function Game() {
-
+  const [openDefinition, setOpenDefinition] = useState(false);
+  const [defintionOf, setDefinitionOf] = useState("");
+  const [gotDefinition, setGotDefinition] = useState(false);
+  const [defintion, setDefinition] = useState([]);
   const [playerWord, setPlayerWord] = useState([]);
   const [unlockNextLevel,setUnlockNextLevel] = useState(false);
   const [level, setLevel] = useState(0);
@@ -174,8 +179,38 @@ export default function Game() {
       setIsError(true);
     }
   }
+
+  const openDefinitionModal = async (word)=>{
+    setIsLoading(true)
+    try{
+    const response = await axios.get("https://api.dictionaryapi.dev/api/v2/entries/en/"+word)
+    setDefinition(response.data);
+    setDefinitionOf(word);
+    setGotDefinition(true);
+    setOpenDefinition(true);
+    setIsLoading(false)
+    }catch(error){
+      console.log(error);
+      setDefinition([]);
+      setDefinitionOf(word);
+      setGotDefinition(false);
+      setOpenDefinition(true);
+      setIsLoading(false)
+    }
+  }
+
   if(isLoading)
-    return (<div>LOADING</div>)
+    return (<div><ul class="loader">
+    <li class="item item-1"></li>
+    <li class="item item-2"></li>
+    <li class="item item-3"></li>
+    <li class="item item-4"></li>
+    <li class="item item-5"></li>
+    <li class="item item-6"></li>
+    <li class="item item-7"></li>
+    <li class="item item-8"></li>
+    <li class="center"></li>
+  </ul></div>)
   else if(isError)
     return (<div>Something went wrong</div>)
   else
@@ -197,7 +232,17 @@ export default function Game() {
           <div className="letter-container">
             {word.map((letter,index)=>(<LetterButton index={index} key={index+level} letter={letter} level={level} letterCallback={letterClicked} resetCallback={getResetFunction}></LetterButton>))}
           </div>
-          {allPlayerWords.map((playerWord,index)=>(<div key={'playerWord' + index} className='player-word'>{playerWord}</div>))}
+          {openDefinition && <DefinitionModal close={setOpenDefinition} word={defintionOf} data={defintion} gotDefinition={gotDefinition}/>}
+          <div className='player-word-container'>
+            {allPlayerWords.map((playerWord,index)=>(
+                <div 
+                  key={'playerWord' + index} 
+                  className='player-word'>
+                  {playerWord}
+                  <button className='player-word-btn' onClick={()=>{openDefinitionModal(playerWord)}}>Defintion</button>
+                </div>
+              ))}
+          </div>
         </div>
       </div>
     )

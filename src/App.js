@@ -17,7 +17,7 @@ function App() {
       {(showHelp)?(<div className="app-help-container">
         <div className='app-help'>
           <div className="app-help-close-btn-container">
-            <button className="app-help-close-btn" onClick={hideHelpDiv}><i class="gg-close"></i></button> 
+            <button className="app-help-close-btn" onClick={hideHelpDiv}><i className="gg-close"></i></button> 
           </div>
           <h3>How to play Womble?</h3>
           <p>Womble is a word jumble game. Aim is to make as many 3-letter words as possible using the alphabets provided. 

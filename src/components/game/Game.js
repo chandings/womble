@@ -1,9 +1,10 @@
-import {useState, useEffect} from 'react'
+import {useState, useEffect, useRef} from 'react'
 import LetterButton from '../letterButton/LetterButton'
 import {nextWord, loadLevelsFile, setLevelsData} from '../../utils/Words'
-import "./Game.css"
+import "./Game.scss"
 import DefinitionModal from '../definitionModal/DefinitionModal';
 import axios from 'axios';
+import KeyPad from '../dialPad/DialPad';
 
 
 export default function Game() {
@@ -21,76 +22,94 @@ export default function Game() {
   const [allValidWords, setAllValidWords] = useState([]);
   const [allPlayerWords, setAllPlayerWords] = useState([]);
   const [resetFunctions, addResetFunctions] = useState([]);
+  const isReady = useRef(false);
 
-  const letterClicked = (letter)=>{
+  const setLetter = (letter)=>{
     setPlayerWord([...playerWord,letter]);
-    checkIfPlayerWordIsValid([...playerWord, letter].join(''));
+  }
+
+  const inputStart = (letter)=>{
+    setPlayerWord([letter]);
+  }
+
+  const inputDone = (finalWord)=>{
+    console.log(finalWord);
+    checkIfPlayerWordIsValid(finalWord.join(""));
   }
 
   const checkIfPlayerWordIsValid = (wordToCheck)=>{
+    let continueChecking = true;
     if(allPlayerWords.indexOf(wordToCheck) === -1 && allValidWords.indexOf(wordToCheck) !== -1){
       setAllPlayerWords(previousWord=>{
-        return [...previousWord, wordToCheck]
-      });
-      setScore((prevScore)=>{
-        if(wordToCheck.length === word.length){
-          return prevScore+10;
+        if(previousWord.indexOf(wordToCheck)===-1){
+          return [...previousWord, wordToCheck]
         }
-        return prevScore+1;
-      })
-      resetAllLetters();
-      if(!unlockNextLevel){
-        checkIfNextLevelReady(wordToCheck)
+        continueChecking = false;
+        return previousWord;
+      });
+      if(continueChecking){
+        setScore((prevScore)=>{
+          if(wordToCheck.length === word.length){
+            return prevScore+10;
+          }
+          return prevScore+1;
+        })
+        setPlayerWord("");
+        if(!unlockNextLevel){
+          checkIfNextLevelReady(wordToCheck)
+        }
+        //save();
       }
-
-      save();
     }
   }
 
-  const save= async ()=>{
+  // const save= async ()=>{
     
-    let unlockNextLevelLatest, allPlayerWordsLatest, scoreLatest, levelLatest;
+  //   let unlockNextLevelLatest, allPlayerWordsLatest, scoreLatest, levelLatest;
 
-    await setUnlockNextLevel((prevValue)=>{
-      unlockNextLevelLatest = prevValue;
-      return prevValue;
-    })
+  //   await setUnlockNextLevel((prevValue)=>{
+  //     unlockNextLevelLatest = prevValue;
+  //     return prevValue;
+  //   })
 
-    await setAllPlayerWords((prevValue)=>{
-      allPlayerWordsLatest = prevValue;
-      return prevValue;
-    })
+  //   await setAllPlayerWords((prevValue)=>{
+  //     allPlayerWordsLatest = prevValue;
+  //     return prevValue;
+  //   })
     
-    await setScore((prevValue)=>{
-      scoreLatest = prevValue;
-      return prevValue;
-    })
+  //   await setScore((prevValue)=>{
+  //     scoreLatest = prevValue;
+  //     return prevValue;
+  //   })
 
-    await setLevel((prevValue)=>{
-      levelLatest = prevValue;
-      return prevValue;
-    })
+  //   await setLevel((prevValue)=>{
+  //     levelLatest = prevValue;
+  //     return prevValue;
+  //   })
 
-    
-    const saveData = JSON.stringify({score:scoreLatest, level:levelLatest, unlockNextLevel:unlockNextLevelLatest,allPlayerWords:allPlayerWordsLatest});
-
-    localStorage.setItem('wombleData',saveData);
-  }
-
-  const saveNewLevel= async (newLevel)=>{
-    
-    let scoreLatest;
-    
-    await setScore((prevValue)=>{
-      scoreLatest = prevValue;
-      return prevValue;
-    })
+  //   console.log(unlockNextLevelLatest, allPlayerWordsLatest, scoreLatest, levelLatest);
 
     
-    const saveData =JSON.stringify({score:scoreLatest, level:newLevel, unlockNextLevel:false,allPlayerWords:[]});
+  //   const saveData = JSON.stringify({score:scoreLatest, level:levelLatest, unlockNextLevel:unlockNextLevelLatest,allPlayerWords:allPlayerWordsLatest});
+  //   console.log(saveData)
 
-    localStorage.setItem('wombleData',saveData);
-  }
+  //   localStorage.setItem('wombleData',saveData);
+  // }
+
+  // const saveNewLevel= async (newLevel)=>{
+    
+  //   let scoreLatest;
+    
+  //   await setScore((prevValue)=>{
+  //     scoreLatest = prevValue;
+  //     return prevValue;
+  //   })
+
+    
+  //   const saveData =JSON.stringify({score:scoreLatest, level:newLevel, unlockNextLevel:false,allPlayerWords:[]});
+
+  //   localStorage.setItem('wombleData',saveData);
+  // }
 
   const checkIfNextLevelReady = (wordToCheck)=>{
     
@@ -124,6 +143,7 @@ export default function Game() {
         let response = await loadLevelsFile();
         const wombleDataStr = localStorage.getItem('wombleData');
         let currentLevel = 0;
+        console.log(wombleDataStr);
         if(wombleDataStr && wombleDataStr !== ""){
           let wombleData = JSON.parse(wombleDataStr);
           currentLevel = wombleData.level;
@@ -131,9 +151,17 @@ export default function Game() {
           setUnlockNextLevel(wombleData.unlockNextLevel);
           setAllPlayerWords(wombleData.allPlayerWords);
           setLevel(wombleData.level);
+        }else{
+          localStorage.setItem('wombleData',JSON.stringify({
+            score:0, 
+            level:0, 
+            unlockNextLevel:false,
+            allPlayerWords:[]
+          }));
         }
         setLevelsData(response.data);
         startLevel(currentLevel);
+        isReady.current = true;
       }catch (e) {
         console.log(e);
         setIsError(true);
@@ -142,6 +170,19 @@ export default function Game() {
     fetchLevel();
 
   },[]);
+  
+  useEffect(()=>{
+    isReady.current&&localStorage.setItem('wombleData',JSON.stringify({...JSON.parse(localStorage.getItem('wombleData')),score}))
+  },[score]);
+  useEffect(()=>{
+    isReady.current&&localStorage.setItem('wombleData',JSON.stringify({...JSON.parse(localStorage.getItem('wombleData')),level}))
+  },[level]);
+  useEffect(()=>{
+    isReady.current&&localStorage.setItem('wombleData',JSON.stringify({...JSON.parse(localStorage.getItem('wombleData')),unlockNextLevel}))
+  },[unlockNextLevel]);
+  useEffect(()=>{
+    isReady.current&&localStorage.setItem('wombleData',JSON.stringify({...JSON.parse(localStorage.getItem('wombleData')),allPlayerWords}))
+  },[allPlayerWords]);
 
   const openNextLevel = ()=>{
     updateScore();
@@ -149,7 +190,7 @@ export default function Game() {
     setAllPlayerWords([]);
     setLevel((prevLevel)=>prevLevel+1);
     startLevel(level+1);
-    saveNewLevel(level+1);
+    //saveNewLevel(level+1);
     setUnlockNextLevel(false);
   }
 
@@ -171,6 +212,7 @@ export default function Game() {
       const response = await nextWord(newLevel);
       //setLevel(newLevel);
       setWord(response.data.word.split(''));
+      //setWord("abcdefghi".split(''));
       setAllValidWords(response.data.allValidWords);
       //setUnlockNextLevel(false);
       setIsLoading(false);
@@ -200,16 +242,16 @@ export default function Game() {
   }
 
   if(isLoading)
-    return (<div><ul class="loader">
-    <li class="item item-1"></li>
-    <li class="item item-2"></li>
-    <li class="item item-3"></li>
-    <li class="item item-4"></li>
-    <li class="item item-5"></li>
-    <li class="item item-6"></li>
-    <li class="item item-7"></li>
-    <li class="item item-8"></li>
-    <li class="center"></li>
+    return (<div><ul className="loader">
+    <li className="item item-1"></li>
+    <li className="item item-2"></li>
+    <li className="item item-3"></li>
+    <li className="item item-4"></li>
+    <li className="item item-5"></li>
+    <li className="item item-6"></li>
+    <li className="item item-7"></li>
+    <li className="item item-8"></li>
+    <li className="center"></li>
   </ul></div>)
   else if(isError)
     return (<div>Something went wrong</div>)
@@ -229,9 +271,7 @@ export default function Game() {
           <button className="game-btn" onClick={resetAllLetters} disabled={playerWord.length==0}>Clear</button>
           <button className="game-btn" onClick={openNextLevel} disabled={!unlockNextLevel}>Next</button>
           </div>
-          <div className="letter-container">
-            {word.map((letter,index)=>(<LetterButton index={index} key={index+level} letter={letter} level={level} letterCallback={letterClicked} resetCallback={getResetFunction}></LetterButton>))}
-          </div>
+          <KeyPad word={word} level={level} inputDone={inputDone} inputStart={inputStart} setLetter={setLetter}></KeyPad>
           {openDefinition && <DefinitionModal close={setOpenDefinition} word={defintionOf} data={defintion} gotDefinition={gotDefinition}/>}
           <div className='player-word-container'>
             {allPlayerWords.map((playerWord,index)=>(

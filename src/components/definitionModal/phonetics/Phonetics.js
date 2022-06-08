@@ -1,4 +1,4 @@
-import "./Phonetics.css";
+import "./Phonetics.scss";
 
 export default function Phonetics({phonetics, index}) {
   return (
@@ -8,7 +8,7 @@ export default function Phonetics({phonetics, index}) {
             {(phonetic.audio)&&(<><audio id={"audio"+index+phoneticIndex}>
                 <source src={phonetic.audio} type="audio/mpeg"></source>
             </audio>
-            <button onClick={()=>{document.getElementById("audio"+index+phoneticIndex).play()}}>Play</button></>)}
+            <button onClick={()=>{document.getElementById("audio"+index+phoneticIndex).play()}}>Audio</button></>)}
         </div>
     })
   )

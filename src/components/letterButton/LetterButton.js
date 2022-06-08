@@ -1,4 +1,4 @@
-import './LetterButton.css';
+import './LetterButton.scss';
 import {useState, useEffect} from 'react'
 
 export default function LetterButton({index,letter, letterCallback, resetCallback}) {
@@ -15,11 +15,11 @@ export default function LetterButton({index,letter, letterCallback, resetCallbac
     }
 
     const letterClicked=()=>{
-        if(!isEnabled){
-            return;
-        }
-        setIsEnabled(false)
-        letterCallback(letter)
+        // if(!isEnabled){
+        //     return;
+        // }
+        // setIsEnabled(false)
+        // letterCallback(letter)
     };
     return (
         <div className='letter-button' disabled={!isEnabled} onClick={letterClicked}>

@@ -1,5 +1,5 @@
 import ReactDom from "react-dom"
-import "./DefinitionModal.css"
+import "./DefinitionModal.scss"
 import Meanings from "./meanings/Meanings"
 import Phonetics from "./phonetics/Phonetics"
 

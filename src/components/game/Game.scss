@@ -7,15 +7,10 @@
 }
 .game {
     display: flex;
+    width:400px;
     flex-direction: column;
   }
 
-  .letter-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content:center;
-  }
   .word-container{
     padding: 10px;
     height:100px;

@@ -1,0 +1,128 @@
+.letter-container {
+    display: flex;
+    flex-direction: column;
+    justify-content:flex-start;
+    -webkit-touch-callout: none;  
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+  }
+
+  .letter-row {
+    display: flex;
+    flex-direction: row;
+    justify-content:space-between;
+    margin-top:60px;
+  }
+
+  .keypad-letter-button{
+    background-color: #95f962;
+    color: #30501f;
+    width: 60px;
+    height: 60px;
+    border-radius: 30px;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    font-size: 45px;
+    font-weight: bold;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+
+  .keypad-letter-button[selected="true"]{
+    color: #95f962;
+    background-color: #30501f;
+  }
+
+
+/// Mixin to place items on a circle
+/// @author Hugo Giraudel
+/// @author Ana Tudor
+/// @param {Integer} $item-count - Number of items on the circle
+/// @param {Length} $circle-size - Large circle size
+/// @param {Length} $item-size - Single item size
+@mixin on-circle($item-count, $circle-size, $item-size) {  
+  position: relative;
+  width:  $circle-size;
+  height: $circle-size;
+  border-radius: 50%;
+  padding: 0; 
+  list-style: none;
+  z-index: 2;
+  
+  > * {
+    display: block;
+    position: absolute;
+    top:  50%; 
+    left: 50%;
+    margin: -($item-size / 2);
+    width:  $item-size;
+    height: $item-size;
+  
+    $angle: (360 / $item-count);
+    $rot: -90;
+
+    @for $i from 1 through $item-count {
+      &:nth-of-type(#{$i}) {
+        transform: rotate($rot * 1deg) translate($circle-size / 2) rotate($rot * -1deg);
+      }
+
+      $rot: $rot + $angle;
+    }
+  }
+}
+
+.circle-container-5 {
+  @include on-circle($item-count: 5, $circle-size: 300px, $item-size: 100px); 
+  margin: 5em auto 50px;
+  div { 
+    // display: block;
+    font-size: 75px;
+    border-radius: 50%; 
+    transition: .15s;
+  }
+}
+
+.circle-container-6 {
+  @include on-circle($item-count: 6, $circle-size: 300px, $item-size: 100px); 
+  margin: 5em auto 50px;
+  div { 
+    // display: block;
+    font-size: 75px;
+    border-radius: 50%;  
+    transition: .15s;
+  }
+}
+
+.circle-container-7 {
+  @include on-circle($item-count: 7, $circle-size: 300px, $item-size: 100px); 
+  margin: 5em auto 50px;
+  div { 
+    // display: block; 
+    font-size: 75px;
+    border-radius: 50%; 
+    transition: .15s;
+  }
+}
+
+.circle-container-8 {
+  @include on-circle($item-count: 8, $circle-size: 300px, $item-size: 80px); 
+  margin: 5em auto 50px;
+  div { 
+    // display: block; 
+    font-size: 60px;
+    border-radius: 50%; 
+    transition: .15s;
+  }
+}
+
+.circle-container-9 {
+  @include on-circle($item-count: 9, $circle-size: 300px, $item-size: 60px); 
+  margin: 5em auto 50px;
+  div { 
+    // display: block; 
+    transition: .15s;
+  }
+}

@@ -64,6 +64,28 @@
     font-family: Arial, Helvetica, sans-serif;
   }
 
+  .incorrect-transition-exit-active {
+    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  }
+  
+@keyframes shake {
+  10%, 90% {
+    transform: rotate(0);
+  }
+  
+  20%, 80% {
+    transform: rotate(5deg);
+  }
+
+  30%, 50%, 70% {
+    transform: rotate(-10deg);
+  }
+
+  40%, 60% {
+    transform: rotate(10deg);
+  }
+}
+
   .game-btn-container{
       display: flex;
       justify-content: space-evenly;

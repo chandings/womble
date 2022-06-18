@@ -77,6 +77,7 @@
 .circle-container-5 {
   @include on-circle($item-count: 5, $circle-size: 300px, $item-size: 100px); 
   margin: 5em auto 50px;
+  overflow: visible;
   div { 
     // display: block;
     font-size: 75px;
@@ -88,6 +89,7 @@
 .circle-container-6 {
   @include on-circle($item-count: 6, $circle-size: 300px, $item-size: 100px); 
   margin: 5em auto 50px;
+  overflow: visible;
   div { 
     // display: block;
     font-size: 75px;
@@ -99,6 +101,7 @@
 .circle-container-7 {
   @include on-circle($item-count: 7, $circle-size: 300px, $item-size: 100px); 
   margin: 5em auto 50px;
+  overflow: visible;
   div { 
     // display: block; 
     font-size: 75px;
@@ -110,6 +113,7 @@
 .circle-container-8 {
   @include on-circle($item-count: 8, $circle-size: 300px, $item-size: 80px); 
   margin: 5em auto 50px;
+  overflow: visible;
   div { 
     // display: block; 
     font-size: 60px;
@@ -121,6 +125,7 @@
 .circle-container-9 {
   @include on-circle($item-count: 9, $circle-size: 300px, $item-size: 60px); 
   margin: 5em auto 50px;
+  overflow: visible;
   div { 
     // display: block; 
     transition: .15s;

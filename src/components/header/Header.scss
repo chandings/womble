@@ -1,7 +1,8 @@
 .header{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content:flex-start;
+    gap:10px;
     width: 100%;
     background-color: #95f962;
     padding: 10px;
@@ -10,7 +11,7 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
-.header-btn{
+.nav-btn{
     font-weight:bold;
     color: #30501f;
     font-size:20px;
@@ -24,16 +25,49 @@
 }
 
 @media (hover: hover), (-ms-high-contrast:none) {
-    .header-btn:hover{
+    .nav-btn:hover{
         color: #95f962;
         background-color:#30501f;
     }
 }
 
-.header-btn:active{
+.nav-btn:active{
     color: #95f962;
     background-color:#30501f;
 }
-.header-btn-container{
-    padding: 0 10px;
+
+.nav-shadow{
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+    top: 0px;
+    z-index: 4;
+    backdrop-filter:blur(3px);
+}
+.nav-outer{
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    gap:5px;
+    position: fixed;
+    top: 0;
+    left: -100%;
+    transition: .5s;
+    height: 100vh;
+    width: 250px;
+    background-color:#30501f;
+    color: #95f962;
+    z-index: 5;
+}
+
+.nav-outer.active{
+    left:0;
+    transition: .5s;
+}
+
+.nav-close{
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+    font-size: 30px;
 }

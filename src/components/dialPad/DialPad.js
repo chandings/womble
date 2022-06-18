@@ -2,7 +2,7 @@ import {useEffect, useState, useRef} from 'react';
 import { Line } from 'react-lineto';
 import "./DialPad.scss"
 
-export default function KeyPad({word, setLetter, inputDone, inputStart}) {
+export default function DialPad({word, setLetter, inputDone, inputStart}) {
     const [selectedIndex,setSelectedIndex] = useState([])
     const [takingInput,setTakingInput] = useState(false)
     //const [selectedWord,setSelectedWord] = useState([])
@@ -145,7 +145,7 @@ export default function KeyPad({word, setLetter, inputDone, inputStart}) {
     }
 
     return (
-        <div className="letter-container" onTouchMove={touchMoved} onMouseMove={mouseMove}>{selectedIndex}
+        <div className="letter-container" onTouchMove={touchMoved} onMouseMove={mouseMove}>
         {takingInput&&selectedIndex.map((selected, index)=>{
             if(index===selectedIndex.length-1){
                 if(coordinates){

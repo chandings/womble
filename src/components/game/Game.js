@@ -1,10 +1,11 @@
 import {useState, useEffect, useRef} from 'react'
+import { CSSTransition } from "react-transition-group";
 import LetterButton from '../letterButton/LetterButton'
 import {nextWord, loadLevelsFile, setLevelsData} from '../../utils/Words'
 import "./Game.scss"
 import DefinitionModal from '../definitionModal/DefinitionModal';
 import axios from 'axios';
-import KeyPad from '../dialPad/DialPad';
+import DialPad from '../dialPad/DialPad';
 
 
 export default function Game() {
@@ -22,6 +23,8 @@ export default function Game() {
   const [allValidWords, setAllValidWords] = useState([]);
   const [allPlayerWords, setAllPlayerWords] = useState([]);
   const [resetFunctions, addResetFunctions] = useState([]);
+  const [showPlayerWord, setShowPlayerWord] = useState(false);
+  const [wordTransitions,setWordTransitions] = useState("incorrect-transition")
   const isReady = useRef(false);
 
   const setLetter = (letter)=>{
@@ -29,12 +32,14 @@ export default function Game() {
   }
 
   const inputStart = (letter)=>{
+    setShowPlayerWord(true);
     setPlayerWord([letter]);
   }
 
   const inputDone = (finalWord)=>{
     console.log(finalWord);
     checkIfPlayerWordIsValid(finalWord.join(""));
+    setShowPlayerWord(false);
   }
 
   const checkIfPlayerWordIsValid = (wordToCheck)=>{
@@ -58,58 +63,9 @@ export default function Game() {
         if(!unlockNextLevel){
           checkIfNextLevelReady(wordToCheck)
         }
-        //save();
       }
     }
   }
-
-  // const save= async ()=>{
-    
-  //   let unlockNextLevelLatest, allPlayerWordsLatest, scoreLatest, levelLatest;
-
-  //   await setUnlockNextLevel((prevValue)=>{
-  //     unlockNextLevelLatest = prevValue;
-  //     return prevValue;
-  //   })
-
-  //   await setAllPlayerWords((prevValue)=>{
-  //     allPlayerWordsLatest = prevValue;
-  //     return prevValue;
-  //   })
-    
-  //   await setScore((prevValue)=>{
-  //     scoreLatest = prevValue;
-  //     return prevValue;
-  //   })
-
-  //   await setLevel((prevValue)=>{
-  //     levelLatest = prevValue;
-  //     return prevValue;
-  //   })
-
-  //   console.log(unlockNextLevelLatest, allPlayerWordsLatest, scoreLatest, levelLatest);
-
-    
-  //   const saveData = JSON.stringify({score:scoreLatest, level:levelLatest, unlockNextLevel:unlockNextLevelLatest,allPlayerWords:allPlayerWordsLatest});
-  //   console.log(saveData)
-
-  //   localStorage.setItem('wombleData',saveData);
-  // }
-
-  // const saveNewLevel= async (newLevel)=>{
-    
-  //   let scoreLatest;
-    
-  //   await setScore((prevValue)=>{
-  //     scoreLatest = prevValue;
-  //     return prevValue;
-  //   })
-
-    
-  //   const saveData =JSON.stringify({score:scoreLatest, level:newLevel, unlockNextLevel:false,allPlayerWords:[]});
-
-  //   localStorage.setItem('wombleData',saveData);
-  // }
 
   const checkIfNextLevelReady = (wordToCheck)=>{
     
@@ -135,6 +91,10 @@ export default function Game() {
   const resetAllLetters = ()=>{
     setPlayerWord("");
     resetFunctions.forEach(item=>item.reset())
+  }
+
+  const getInputMode = ()=>{
+    return <DialPad word={word} level={level} inputDone={inputDone} inputStart={inputStart} setLetter={setLetter}></DialPad>
   }
 
   useEffect(()=>{
@@ -265,13 +225,22 @@ export default function Game() {
               <label className="score">Level: {level+1}</label>
               <label className="score">Score: {score}</label>
             </div>
-            <div className='word'>{playerWord}</div>
+            <div className='word'>
+              <CSSTransition
+                in={showPlayerWord}
+                timeout={500}
+                classNames={wordTransitions}
+                appear
+                >
+                <span>{playerWord}</span>
+              </CSSTransition>
+            </div>
           </div>
           <div className="game-btn-container">
           <button className="game-btn" onClick={resetAllLetters} disabled={playerWord.length==0}>Clear</button>
           <button className="game-btn" onClick={openNextLevel} disabled={!unlockNextLevel}>Next</button>
           </div>
-          <KeyPad word={word} level={level} inputDone={inputDone} inputStart={inputStart} setLetter={setLetter}></KeyPad>
+          {getInputMode()}
           {openDefinition && <DefinitionModal close={setOpenDefinition} word={defintionOf} data={defintion} gotDefinition={gotDefinition}/>}
           <div className='player-word-container'>
             {allPlayerWords.map((playerWord,index)=>(

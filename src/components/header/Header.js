@@ -22,7 +22,7 @@ export default function Header({setCurrentView}) {
           <button className='nav-btn' onClick={()=>{handleClick("config")}}>Config</button>
           <button className='nav-btn' onClick={()=>{handleClick("unlockedWords")}}><span>Unlocked Words</span> <span className='badge'>{getWombleDataValue('allPlayerWords').length}</span></button>
           <button className='nav-btn' onClick={()=>{console.log("debug clear local storage");localStorage.setItem('wombleData','')}}>Clear Progress</button>
-          <button className='nav-btn' onClick={()=>{console.log("debug clear local storage");localStorage.setItem('wombleConfigData','')}}>Clear Congig</button>
+          <button className='nav-btn' onClick={()=>{console.log("debug clear local storage");localStorage.setItem('wombleConfigData','')}}>Clear Config</button>
         </nav>
       </>
   )

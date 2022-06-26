@@ -3,7 +3,7 @@ const getLocalCofigData = ()=>{
     let wombleConfigData;
     if(!wombleConfigStr || wombleConfigStr===""){
       wombleConfigData = {
-        useDragInput:false,
+        useDragInput:true,
         audio:true
       }
       localStorage.setItem('wombleConfigData',JSON.stringify(wombleConfigData));

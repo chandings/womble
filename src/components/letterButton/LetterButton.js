@@ -1,4 +1,4 @@
-import './LetterButton.css';
+import './LetterButton.scss';
 import {useState, useEffect} from 'react'
 
 export default function LetterButton({index,letter, letterCallback, resetCallback}) {

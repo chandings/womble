@@ -1,36 +1,36 @@
-import './App.css';
+import './App.scss';
 import Header from './components/header/Header';
 import Game from './components/game/Game';
 import {useState} from 'react'
+import Help from './components/help/Help';
+import Config from './components/config/Config';
+import UnlockedWords from './components/unlockedWords/UnlockedWords';
 
 function App() {
-  const [showHelp, setShowHelp] = useState(false);
-  const showHelpDiv =()=>{
-    setShowHelp(true);
+  const [currentView, setCurrentView] = useState("game");
+  const [isPrestine, setIsPrestine] = useState(true)
+
+  const getCurrentView = ()=>{
+    switch(currentView){
+      case "help":
+        return <Help setCurrentView={setCurrentView}/>
+      case "config":
+        return <Config setCurrentView={setCurrentView}/>
+      case "unlockedWords":
+        return <UnlockedWords setCurrentView={setCurrentView}/>
+      default:
+        return <Game/>
+    }
   }
-  const hideHelpDiv =()=>{
-    setShowHelp(false);
+
+  if(isPrestine){
+    return(<div className='app-message-container' onClick={()=>{setIsPrestine(false)}}> <h3 className='app-message-title'>Please touch anywhere to continue.</h3><p className='app-message'>This is needed to ensure audio plays properly. As per the latest browser policy audio is not allowed to play unless the user has intereacted with the web page. If you want to disable the audio please go to config in menu and turn off audio.</p></div>)
   }
+
   return (
     <div className="App">
-      <Header showHelp={showHelpDiv}></Header>
-      {(showHelp)?(<div className="app-help-container">
-        <div className='app-help'>
-          <div className="app-help-close-btn-container">
-            <button className="app-help-close-btn" onClick={hideHelpDiv}><i className="gg-close"></i></button> 
-          </div>
-          <h3>How to play Womble?</h3>
-          <p>Womble is a word jumble game. Aim is to make as many 3-letter words as possible using the alphabets provided. 
-          To be able to move to the next level you need to make at least one word using all the alphabets.</p>
-          <h3>How are you scored?</h3>
-          <ul>
-            <li>Every word you make gets you 1 pont.</li>
-            <li>If the word uses all the available alphabets you get 10 points.</li>
-            <li>If you are able to make half of the words or more in our list you get a 30 points bonus.</li>
-            <li>If you are able to make all of the words in our list you get a 100 points bonus.</li>
-          </ul>
-        </div>
-      </div>):(<Game></Game>)}
+      <Header setCurrentView={setCurrentView}></Header>
+      {getCurrentView()}
     </div>
   );
 }

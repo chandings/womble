@@ -3,6 +3,7 @@ let levelsData = []
 const baseURL = 'https://chandings.github.io/womblejsoncreator/WombleJSONs/'
 
 const loadLevelsFile = ()=>{
+    console.log(baseURL+'levels.json');
     return axios.get(baseURL+'levels.json');
 }
 

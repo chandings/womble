@@ -1,0 +1,31 @@
+.config-container{
+    font-size:20px;
+    font-family: Arial, Helvetica, sans-serif;
+    color:#30501f;
+    margin:10px;
+    text-align:left;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .config{
+    width: 550px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .config-container h3{
+    text-align:center;
+  }
+
+  .config-close-btn-container{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+   hr{
+    width: 80%;
+    margin-top: 20px;
+  }

@@ -1,0 +1,35 @@
+.keypad-container {
+  display: flex;
+  flex-direction: column;
+  justify-content:flex-start;
+  -webkit-touch-callout: none;  
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.letter-container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content:center;
+  gap: 5px;
+}
+
+.check-button{
+  background-color:#30501f;
+  color: #95f962;
+  width: 100px;
+  height: 100px;
+  border-radius:10px;
+  margin-top: 10px;
+  justify-self: center;
+  cursor:pointer;
+  display: grid;
+  place-items:center;
+  font-size:30px;
+  font-weight: bold;
+  font-family: Arial, Helvetica, sans-serif;
+}

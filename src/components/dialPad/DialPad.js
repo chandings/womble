@@ -105,6 +105,7 @@ export default function DialPad({word, setLetter, inputDone, inputStart}) {
         setTakingInput(true);
         prevSelectedindex.current = [index];
         setSelectedIndex([index])
+        setCooridinate(null)
         element.setAttribute("selected","true");
         inputStart(word[index]);
 
@@ -138,14 +139,14 @@ export default function DialPad({word, setLetter, inputDone, inputStart}) {
                     onMouseDown={(e)=>{keyPressed(index,e.target)}} 
                     onTouchStart={(e)=>{keyPressed(index,e.target)}}
                     letterindex ={index} 
-                    className='keypad-letter-button'>{word[index]}</div>
+                    className='dialpad-letter-button'>{word[index]}</div>
             )
         }
         return null
     }
 
     return (
-        <div className="letter-container" onTouchMove={touchMoved} onMouseMove={mouseMove}>
+        <div className="dialpad-container" onTouchMove={touchMoved} onMouseMove={mouseMove}>
         {takingInput&&selectedIndex.map((selected, index)=>{
             if(index===selectedIndex.length-1){
                 if(coordinates){

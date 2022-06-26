@@ -1,4 +1,4 @@
-.letter-container {
+.dialpad-container {
     display: flex;
     flex-direction: column;
     justify-content:flex-start;
@@ -17,7 +17,7 @@
     margin-top:60px;
   }
 
-  .keypad-letter-button{
+  .dialpad-letter-button{
     background-color: #95f962;
     color: #30501f;
     width: 60px;
@@ -31,7 +31,7 @@
     font-family: Arial, Helvetica, sans-serif;
   }
 
-  .keypad-letter-button[selected="true"]{
+  .dialpad-letter-button[selected="true"]{
     color: #95f962;
     background-color: #30501f;
   }

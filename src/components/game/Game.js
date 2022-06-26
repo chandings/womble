@@ -1,18 +1,20 @@
 import {useState, useEffect, useRef} from 'react'
-import { CSSTransition } from "react-transition-group";
-import LetterButton from '../letterButton/LetterButton'
+//import { CSSTransition } from "react-transition-group";
 import {nextWord, loadLevelsFile, setLevelsData} from '../../utils/Words'
 import "./Game.scss"
 import DefinitionModal from '../definitionModal/DefinitionModal';
 import axios from 'axios';
 import DialPad from '../dialPad/DialPad';
+import KeyPad from '../keyPad/KeyPad';
+import correct from '../../audio/correct.mp3'
+import wrong from '../../audio/wrong.mp3'
+import type from '../../audio/type.mp3'
+import {setLocalConfigDataParam, getLocalCofigData} from '../../utils/LocalConfig'
+import {getWombleData, setWombleDataParam} from '../../utils/LocalData'
+import Loader from '../loader/Loader';
 
 
 export default function Game() {
-  const [openDefinition, setOpenDefinition] = useState(false);
-  const [defintionOf, setDefinitionOf] = useState("");
-  const [gotDefinition, setGotDefinition] = useState(false);
-  const [defintion, setDefinition] = useState([]);
   const [playerWord, setPlayerWord] = useState([]);
   const [unlockNextLevel,setUnlockNextLevel] = useState(false);
   const [level, setLevel] = useState(0);
@@ -23,23 +25,53 @@ export default function Game() {
   const [allValidWords, setAllValidWords] = useState([]);
   const [allPlayerWords, setAllPlayerWords] = useState([]);
   const [resetFunctions, addResetFunctions] = useState([]);
-  const [showPlayerWord, setShowPlayerWord] = useState(false);
-  const [wordTransitions,setWordTransitions] = useState("incorrect-transition")
+  const [wordTransitions,setWordTransitions] = useState("")
   const isReady = useRef(false);
+  const audio = useRef(true);
+  const [useDragInput, setUseDragInput] = useState(true);
+
+  const correctAudio = useRef(new Audio(correct));
+  const wrongAudio = useRef(new Audio(wrong));
+  //Adding redundancy as typeaudio may be played multiple time quickly
+  const typeAudio = useRef([new Audio(type),new Audio(type),new Audio(type)]);
+  const typeAudioIndex = useRef(0);
 
   const setLetter = (letter)=>{
     setPlayerWord([...playerWord,letter]);
+    typeAudioIndex.current++;
+    if(typeAudioIndex.current >= typeAudio.current.length){
+      typeAudioIndex.current = 0;
+    }
+    
+    playAudio(typeAudio.current[typeAudioIndex.current]);
+  }
+
+  const playAudio = (audioToBePlayed)=>{
+    console.log("asdfsdfsaf")
+    if(audio.current){
+      audioToBePlayed.play();
+    }
   }
 
   const inputStart = (letter)=>{
-    setShowPlayerWord(true);
+    //setShowPlayerWord(true);
+    setWordTransitions("")
     setPlayerWord([letter]);
+    typeAudioIndex.current = 0;
+    playAudio(typeAudio.current[typeAudioIndex.current]);
   }
 
   const inputDone = (finalWord)=>{
     console.log(finalWord);
-    checkIfPlayerWordIsValid(finalWord.join(""));
-    setShowPlayerWord(false);
+    const isPlayerWordValid = checkIfPlayerWordIsValid(finalWord.join(""));
+    if(isPlayerWordValid){
+      setWordTransitions("correct-transition")
+      playAudio(correctAudio.current)
+    }else if(finalWord.length>0){
+      setWordTransitions("incorrect-transition")
+      playAudio(wrongAudio.current)
+    }
+    //setShowPlayerWord(false);
   }
 
   const checkIfPlayerWordIsValid = (wordToCheck)=>{
@@ -59,12 +91,14 @@ export default function Game() {
           }
           return prevScore+1;
         })
-        setPlayerWord("");
+        //setPlayerWord("");
         if(!unlockNextLevel){
           checkIfNextLevelReady(wordToCheck)
         }
       }
+      return continueChecking;
     }
+    return false;
   }
 
   const checkIfNextLevelReady = (wordToCheck)=>{
@@ -94,31 +128,28 @@ export default function Game() {
   }
 
   const getInputMode = ()=>{
-    return <DialPad word={word} level={level} inputDone={inputDone} inputStart={inputStart} setLetter={setLetter}></DialPad>
+    if(useDragInput){
+      return <DialPad word={word} level={level} inputDone={inputDone} inputStart={inputStart} setLetter={setLetter}/>
+    }else{
+      return <KeyPad word={word} level={level} inputDone={inputDone} inputStart={inputStart} setLetter={setLetter}/>
+    }
   }
 
   useEffect(()=>{
     const fetchLevel = async ()=>{
       try {
+        const wombleConfigData = getLocalCofigData();
+        setUseDragInput(wombleConfigData.useDragInput)
+        audio.current = wombleConfigData.audio;
         let response = await loadLevelsFile();
-        const wombleDataStr = localStorage.getItem('wombleData');
-        let currentLevel = 0;
-        console.log(wombleDataStr);
-        if(wombleDataStr && wombleDataStr !== ""){
-          let wombleData = JSON.parse(wombleDataStr);
-          currentLevel = wombleData.level;
-          setScore(wombleData.score);
-          setUnlockNextLevel(wombleData.unlockNextLevel);
-          setAllPlayerWords(wombleData.allPlayerWords);
-          setLevel(wombleData.level);
-        }else{
-          localStorage.setItem('wombleData',JSON.stringify({
-            score:0, 
-            level:0, 
-            unlockNextLevel:false,
-            allPlayerWords:[]
-          }));
-        }
+        
+        const wombleData = getWombleData();
+        let currentLevel = wombleData.level;
+        setScore(wombleData.score);
+        setUnlockNextLevel(wombleData.unlockNextLevel);
+        setAllPlayerWords(wombleData.allPlayerWords);
+        setLevel(wombleData.level);
+
         setLevelsData(response.data);
         startLevel(currentLevel);
         isReady.current = true;
@@ -132,16 +163,16 @@ export default function Game() {
   },[]);
   
   useEffect(()=>{
-    isReady.current&&localStorage.setItem('wombleData',JSON.stringify({...JSON.parse(localStorage.getItem('wombleData')),score}))
+    isReady.current&&setWombleDataParam(score, 'score');
   },[score]);
   useEffect(()=>{
-    isReady.current&&localStorage.setItem('wombleData',JSON.stringify({...JSON.parse(localStorage.getItem('wombleData')),level}))
+    isReady.current&&setWombleDataParam(level, 'level');
   },[level]);
   useEffect(()=>{
-    isReady.current&&localStorage.setItem('wombleData',JSON.stringify({...JSON.parse(localStorage.getItem('wombleData')),unlockNextLevel}))
+    isReady.current&&setWombleDataParam(unlockNextLevel, 'unlockNextLevel');
   },[unlockNextLevel]);
   useEffect(()=>{
-    isReady.current&&localStorage.setItem('wombleData',JSON.stringify({...JSON.parse(localStorage.getItem('wombleData')),allPlayerWords}))
+    isReady.current&&setWombleDataParam(allPlayerWords, 'allPlayerWords');
   },[allPlayerWords]);
 
   const openNextLevel = ()=>{
@@ -163,6 +194,10 @@ export default function Game() {
       setScore((prevScore)=>{
         return prevScore+30;
       })
+    }else if(allValidWords.length === allPlayerWords.length){
+      setScore((prevScore)=>{
+        return prevScore+100;
+      }) 
     }
   }
 
@@ -182,42 +217,13 @@ export default function Game() {
     }
   }
 
-  const openDefinitionModal = async (word)=>{
-    setIsLoading(true)
-    try{
-    const response = await axios.get("https://api.dictionaryapi.dev/api/v2/entries/en/"+word)
-    setDefinition(response.data);
-    setDefinitionOf(word);
-    setGotDefinition(true);
-    setOpenDefinition(true);
-    setIsLoading(false)
-    }catch(error){
-      console.log(error);
-      setDefinition([]);
-      setDefinitionOf(word);
-      setGotDefinition(false);
-      setOpenDefinition(true);
-      setIsLoading(false)
-    }
-  }
-
   if(isLoading)
-    return (<div><ul className="loader">
-    <li className="item item-1"></li>
-    <li className="item item-2"></li>
-    <li className="item item-3"></li>
-    <li className="item item-4"></li>
-    <li className="item item-5"></li>
-    <li className="item item-6"></li>
-    <li className="item item-7"></li>
-    <li className="item item-8"></li>
-    <li className="center"></li>
-  </ul></div>)
+    return (<Loader/>)
   else if(isError)
     return (<div>Something went wrong</div>)
   else
     return (
-      <div className="game-container">
+      <div className="game-container" onTouchStart={()=>{console.log("Registering touch event to enable sound play!")}}>
         <div className="game">
           <div className="word-container">
             <div className="score-container">
@@ -225,24 +231,16 @@ export default function Game() {
               <label className="score">Level: {level+1}</label>
               <label className="score">Score: {score}</label>
             </div>
-            <div className='word'>
-              <CSSTransition
-                in={showPlayerWord}
-                timeout={500}
-                classNames={wordTransitions}
-                appear
-                >
-                <span>{playerWord}</span>
-              </CSSTransition>
+            <div className={'word'}>
+                <div className={wordTransitions}>{playerWord}</div>
             </div>
           </div>
           <div className="game-btn-container">
-          <button className="game-btn" onClick={resetAllLetters} disabled={playerWord.length==0}>Clear</button>
+          {/* <button className="game-btn" onClick={resetAllLetters} disabled={playerWord.length==0}>Clear</button> */}
           <button className="game-btn" onClick={openNextLevel} disabled={!unlockNextLevel}>Next</button>
           </div>
           {getInputMode()}
-          {openDefinition && <DefinitionModal close={setOpenDefinition} word={defintionOf} data={defintion} gotDefinition={gotDefinition}/>}
-          <div className='player-word-container'>
+          {/* <div className='player-word-container'>
             {allPlayerWords.map((playerWord,index)=>(
                 <div 
                   key={'playerWord' + index} 
@@ -251,7 +249,7 @@ export default function Game() {
                   <button className='player-word-btn' onClick={()=>{openDefinitionModal(playerWord)}}>Defintion</button>
                 </div>
               ))}
-          </div>
+          </div> */}
         </div>
       </div>
     )

@@ -1,13 +1,15 @@
 import React from "react";
 import "./Help.css";
 
+import * as faIcons from "react-icons/fa";
+
 export default function Help({ setCurrentView}) {
   return (
     <div className="help-container">
       <div className="help">
         <div className="help-close-btn-container">
-          <button className="help-close-btn" onClick={()=>{setCurrentView("")}}>
-            <i className="gg-close"></i>
+          <button className="close-btn" onClick={()=>{setCurrentView("")}}>
+            <faIcons.FaTimes/>
           </button>
         </div>
         <h3>How to play Womble?</h3>

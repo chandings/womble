@@ -2,13 +2,14 @@ import ReactDom from "react-dom"
 import "./DefinitionModal.scss"
 import Meanings from "./meanings/Meanings"
 import Phonetics from "./phonetics/Phonetics"
+import * as faIcons from "react-icons/fa";
 
 export default function DefinitionModal({close,word,data,gotDefinition}) {
     const googleSearchPath = "https://www.google.com/search?q=define+"+word.toLowerCase()
     const googleJSX = (<>
-        <div className='modal-shadow'></div>
+        <div className='blur-modal'></div>
         <div className='definition-modal'>
-            <div className="modal-header">{word}<button className="app-help-close-btn" onClick={()=>{close(false)}}><i className="gg-close"></i></button> </div>
+            <div className="modal-header">{word}<button className="close-btn-dark" onClick={()=>{close(false)}}><faIcons.FaTimes/></button> </div>
             <div className="modal-content">
                 {googleSearchPath}
             </div>
@@ -16,14 +17,14 @@ export default function DefinitionModal({close,word,data,gotDefinition}) {
         </div>
         </>)
     const dataJSX = (<>
-        <div className='modal-shadow'></div>
+        <div className='blur-modal'></div>
         <div className='definition-modal'>
-            <div className="modal-header">{word}<button className="app-help-close-btn" onClick={()=>{close(false)}}><i className="gg-close"></i></button> </div>
+            <div className="modal-header">{word}<button className="close-btn-dark" onClick={()=>{close(false)}}><faIcons.FaTimes/></button> </div>
             <div className="modal-content">
                 <div >{data.map((definition, index)=>{
-                    return <div className="modal-content-definition">
-                    <Phonetics key={"phonetics"+index} phonetics={definition.phonetics}/>
-                    <Meanings key={"meanings"+index} meanings={definition.meanings}/>
+                    return <div  key={"definitionOuter"+index}  className="modal-content-definition">
+                    <Phonetics phonetics={definition.phonetics}/>
+                    <Meanings meanings={definition.meanings}/>
                     </div>
                 })}
                 </div>

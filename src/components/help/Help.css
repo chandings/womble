@@ -20,25 +20,3 @@
     display: flex;
     justify-content: flex-end;
   }
-  
-  .help-close-btn{
-    background: #95f962;
-    border: 1px solid #95f962;
-    color:#30501f;
-    border-radius: 18px;
-    height: 36px;
-    width: 36px;
-    justify-content: flex-end;
-  }
-  
-  @media (hover: hover), (-ms-high-contrast:none) {
-    .help-close-btn:hover{
-        color: #95f962;
-        background-color:#30501f;
-    }
-  }
-  
-  .help-close-btn:active{
-    color: #95f962;
-    background-color:#30501f;
-  }

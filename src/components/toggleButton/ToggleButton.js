@@ -18,7 +18,7 @@ export default class ToggleButton extends Component {
     const {prefix, suffix, change} = this.props;
     return (
         <div className='toggle-button-container'>
-        <label className={((!value)?'active ':'') + 'toggle-button-prefix'}>{prefix}</label>
+        <label className={((value)?'active ':'') + 'toggle-button-prefix'}>{prefix}</label>
         <div className='toggle-button-bg' 
             onClick={()=>{
                 this.setState((prevValue)=>{
@@ -26,9 +26,9 @@ export default class ToggleButton extends Component {
                     return {value:!prevValue.value}
                 });
             }}>
-            <div className={((value)?'active ':'') + 'toggle-button-grip'}></div>
+            <div className={((!value)?'active ':'') + 'toggle-button-grip'}></div>
         </div>
-        <label className={((value)?'active ':'') + 'toggle-button-suffix'}>{suffix}</label>
+        <label className={((!value)?'active ':'') + 'toggle-button-suffix'}>{suffix}</label>
     </div>
     )
   }

@@ -32,40 +32,25 @@
   .score{
     font-size:15px;
   }
-  .player-word-container{
-    padding:5px;
-
-  }
-  .player-word{
-    font-size:15px;
-    text-align: left;
-    margin:5px;
-    color: #30501f;
-    font-weight: bold;
-    font-family: Arial, Helvetica, sans-serif;
-  }
-  .player-word-btn{
-    font-weight:bold;
-    color: #95f962;
-    font-size:15px;
-    background-color:#30501f;
-    border-radius:10px;
-    border: 0;
-    padding:5px;
-    margin:0 15px;
-    padding:5px 10px;
-    margin-bottom: 10px;
-  }
   .word{
     height: 32px;
     font-size:30px;
     color: #30501f;
     font-weight: bold;
     font-family: Arial, Helvetica, sans-serif;
+    overflow: visible;
   }
 
-  .incorrect-transition-exit-active {
-    animation: shake 0.82s cubic-bezier(.36,.07,.19,.97) both;
+  .correct-transition {
+    opacity: 0;
+    transition: 1s;
+    animation-timing-function: ease-out;
+    transform: scale(5);
+    overflow: visible;
+  }
+
+  .incorrect-transition {
+    animation: shake 1s cubic-bezier(.36,.07,.19,.97) both;
   }
   
 @keyframes shake {
@@ -74,15 +59,20 @@
   }
   
   20%, 80% {
-    transform: rotate(5deg);
+    transform: rotate(10deg);
+    opacity: 100%;
   }
 
   30%, 50%, 70% {
-    transform: rotate(-10deg);
+    transform: rotate(-20deg);
   }
 
   40%, 60% {
-    transform: rotate(10deg);
+    transform: rotate(20deg);
+  }
+
+  100%{
+    opacity:0;
   }
 }
 

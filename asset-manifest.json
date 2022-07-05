@@ -1,18 +1,18 @@
 {
   "files": {
     "main.css": "/womble/static/css/main.555a7fe2.css",
-    "main.js": "/womble/static/js/main.f08d4bf9.js",
+    "main.js": "/womble/static/js/main.2a65bb76.js",
     "static/js/787.2b5e885f.chunk.js": "/womble/static/js/787.2b5e885f.chunk.js",
     "static/media/wrong.mp3": "/womble/static/media/wrong.d682aa45d3662bf41de2.mp3",
     "static/media/type.mp3": "/womble/static/media/type.07d3522cd662cd174880.mp3",
     "static/media/correct.mp3": "/womble/static/media/correct.2944938830ac5d97fe17.mp3",
     "index.html": "/womble/index.html",
     "main.555a7fe2.css.map": "/womble/static/css/main.555a7fe2.css.map",
-    "main.f08d4bf9.js.map": "/womble/static/js/main.f08d4bf9.js.map",
+    "main.2a65bb76.js.map": "/womble/static/js/main.2a65bb76.js.map",
     "787.2b5e885f.chunk.js.map": "/womble/static/js/787.2b5e885f.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.555a7fe2.css",
-    "static/js/main.f08d4bf9.js"
+    "static/js/main.2a65bb76.js"
   ]
 }
